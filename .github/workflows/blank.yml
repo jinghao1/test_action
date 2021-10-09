@@ -35,7 +35,7 @@ jobs:
           pwd
           cd dist
           ls
-          pip install dongtai_agent_python.tar.gz
+          pip install wheel dongtai_agent_python.tar.gz
       - name: Run Check
         run: |
           pip list | grep dongtai
