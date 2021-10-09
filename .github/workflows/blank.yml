@@ -33,7 +33,7 @@ jobs:
       - name: Install Agent
         run: |
           pwd
-          python setup.py sdist
+#          python setup.py sdist
           cd dist
           pip install dongtai_agent_python-0.2.0.tar.gz
       - name: Run Check
