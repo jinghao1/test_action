@@ -20,9 +20,9 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     strategy:
-        max-parallel: 5
+        max-parallel: 6
         matrix:
-          python-version: [3.5, 3.6, 3.7, 3.8, 3.9]
+          python-version: [3.5, 3.6, 3.7, 3.8, 3.9, 3.10]
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v1
@@ -35,7 +35,6 @@ jobs:
           pwd
           cd dist
           ls
-          pip install wheel
           pip install dongtai_agent_python.tar.gz
       - name: Run Check
         run: |
