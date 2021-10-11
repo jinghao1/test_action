@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, ubuntu-18.04, centos-8.3, centos-7.2, centos-6.8,]
+        os: [ubuntu-20.04, ubuntu-18.04]
         python-version: [ 3.6, 3.7, 3.8, 3.9]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
