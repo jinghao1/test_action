@@ -57,7 +57,7 @@ jobs:
     steps:
       - name: Install Django
         run: |
-          python -m pip install "Django${{ matrix.django-version }}"
+          pip install "Django${{ matrix.django-version }}"
       - name: Test Django
         run: |
           echo django
@@ -75,7 +75,7 @@ jobs:
     steps:
       - name: Install Flask
         run: |
-          python -m pip install "Flask${{ matrix.flask-version }}"
+          pip install "Flask${{ matrix.flask-version }}"
       - name: Test Flask
         run: |
           echo flask
