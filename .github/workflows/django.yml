@@ -36,6 +36,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install Agent
         run: |
+          pip install --upgrade pip
           pwd
           cd dist
           ls
@@ -50,4 +51,7 @@ jobs:
           pip install "Django${{ matrix.django-version }}"
       - name: Test Django
         run: |
-          echo django
+          cd testDjango
+          python manage.py runserver 127.0.0.1:8000 &
+          sleep 15
+          curl http://127.0.0.1:8000

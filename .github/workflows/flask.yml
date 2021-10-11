@@ -36,6 +36,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install Agent
         run: |
+          pip install --upgrade pip
           pwd
           cd dist
           ls
@@ -50,4 +51,7 @@ jobs:
           pip install "Flask${{ matrix.flask-version }}"
       - name: Test Flask
         run: |
-          echo flask
+          cd testFlask
+          flask run -h 127.0.0.1 -p 5000 &
+          sleep 15
+          curl http://127.0.0.1:5000
