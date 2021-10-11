@@ -52,6 +52,6 @@ jobs:
       - name: Test Django
         run: |
           cd testDjango
-          python manage.py runserver 127.0.0.1:8000 &
-          sleep 15
-          curl http://127.0.0.1:8000
+          nohup python manage.py runserver :8000 2>&1
+          while ! echo exit | nc localhost 8000; do sleep 10; done
+          curl -s http://localhost:8000

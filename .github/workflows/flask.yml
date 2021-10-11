@@ -52,6 +52,6 @@ jobs:
       - name: Test Flask
         run: |
           cd testFlask
-          flask run -h 127.0.0.1 -p 5000 &
-          sleep 15
-          curl http://127.0.0.1:5000
+          nohup flask run -p 5000 2>&1
+          while ! echo exit | nc localhost 5000; do sleep 10; done
+          curl -s http://localhost:5000
