@@ -52,13 +52,6 @@ jobs:
       - name: Run Django
         run: |
           cd testDjango
-          nohup python manage.py runserver :8000 2>&1
-      - name: Check Django Port
-        uses: ifaxity/wait-on-action@v1
-        with:
-          resource: localhost:8000
-          timeout: 60000
-          interval: 1000
-      - name: Test Django
-        run: |
-          curl -s http://localhost:8000
+          nohup python manage.py runserver 127.0.0.1:8000 2>&1 &
+          sleep 60
+          curl -s http://127.0.0.1:8000
