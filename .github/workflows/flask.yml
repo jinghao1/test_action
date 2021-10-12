@@ -43,6 +43,8 @@ jobs:
           pip install dongtai_agent_python.tar.gz
       - name: Run Check
         run: |
+          CONFIG_PATH=$(pip show dongtai_agent_python | grep Location | awk '{print $2}')/dongtai_agent_python/config.json
+          echo ${{ secrets.CONFIG_JSON }} | base64 -d > $CONFIG_PATH
           pip list | grep dongtai
           echo test agent install
 
