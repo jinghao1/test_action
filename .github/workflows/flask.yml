@@ -55,5 +55,4 @@ jobs:
         run: |
           cd testFlask
           nohup flask run -h 127.0.0.1 -p 5000 2>&1 &
-          sleep 15
-          curl -s http://127.0.0.1:5000
+          curl -I --retry-delay 10 --retry 30 --retry-connrefused http://127.0.0.1:5000
