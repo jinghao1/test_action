@@ -36,7 +36,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install Agent
         run: |
-          pip install --upgrade pip
+          pip install --upgrade pip PyYAML
           pwd
           cd dist
           ls
