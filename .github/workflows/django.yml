@@ -61,4 +61,4 @@ jobs:
         run: |
           cd testDjango
           nohup python manage.py runserver 127.0.0.1:8000 2>&1 &
-          curl -I --retry-delay 10 --retry 30 --retry-connrefused http://127.0.0.1:8000
+          curl -I --fail --retry-delay 10 --retry 30 --retry-connrefused http://127.0.0.1:8000
