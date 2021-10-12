@@ -60,5 +60,5 @@ jobs:
       - name: Run Flask
         run: |
           cd testFlask
-          nohup flask run -h 127.0.0.1 -p 5000 2>&1 &
+          nohup python -u -m flask run -h 127.0.0.1 -p 5000 2>&1 &
           curl -I --fail --retry-delay 10 --retry 30 --retry-connrefused http://127.0.0.1:5000
