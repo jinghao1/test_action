@@ -29,7 +29,16 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: actions/checkout@v2
+      - name: Clone Repository
+        uses: actions/checkout@v2
+      - name: Clone Agent Repository
+        uses: actions/checkout@v2
+        with:
+          repository: HXSecurity/DongTai-agent-python
+          token: ${{ secrets.AGENT_ACCESS_TOKEN }}
+          ref: master
+          path: DongTai-agent-python
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
@@ -37,10 +46,7 @@ jobs:
       - name: Install Agent
         run: |
           pip install --upgrade pip PyYAML
-          pwd
-          cd dist
-          ls
-          pip install dongtai_agent_python.tar.gz
+          pip install ./DongTai-agent-python
       - name: Run Check
         run: |
           CONFIG_PATH=$(pip show dongtai_agent_python | grep Location | awk '{print $2}')/dongtai_agent_python/config.json
