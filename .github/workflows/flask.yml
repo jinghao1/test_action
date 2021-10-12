@@ -49,9 +49,16 @@ jobs:
       - name: Install Flask
         run: |
           pip install "Flask${{ matrix.flask-version }}"
-      - name: Test Flask
+      - name: Run Flask
         run: |
           cd testFlask
           nohup flask run -p 5000 2>&1
-          while ! echo exit | nc localhost 5000; do sleep 10; done
+      - name: Check Flask Port
+        uses: ifaxity/wait-on-action@v1
+        with:
+          resource: localhost:5000
+          timeout: 60000
+          interval: 1000
+      - name: Test Flask
+        run: |
           curl -s http://localhost:5000

@@ -49,9 +49,16 @@ jobs:
       - name: Install Django
         run: |
           pip install "Django${{ matrix.django-version }}"
-      - name: Test Django
+      - name: Run Django
         run: |
           cd testDjango
           nohup python manage.py runserver :8000 2>&1
-          while ! echo exit | nc localhost 8000; do sleep 10; done
+      - name: Check Django Port
+        uses: ifaxity/wait-on-action@v1
+        with:
+          resource: localhost:8000
+          timeout: 60000
+          interval: 1000
+      - name: Test Django
+        run: |
           curl -s http://localhost:8000
