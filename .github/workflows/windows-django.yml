@@ -1,0 +1,69 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Windows Django
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  # sync:
+  setup:
+    # The type of runner that the job will run on
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ "windows-latest" ]
+        python-version: [ "3.6", "3.7", "3.8", "3.9", "3.10" ]
+        django-version: [ ">=3.0,<3.1", ">=3.1,<3.2", ">=3.2,<3.3" ]
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@v2
+      - name: Clone Agent Repository
+        uses: actions/checkout@v2
+        with:
+          repository: HXSecurity/DongTai-agent-python
+          token: ${{ secrets.AGENT_ACCESS_TOKEN }}
+          ref: master
+          path: DongTai-agent-python
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Agent
+        run: |
+          pip install --user --upgrade pip setuptools PyYAML
+          pip install --user ./DongTai-agent-python
+          pip list | grep dongtai
+      - name: Prepare Config
+        shell: python
+        run: |
+          import os, base64, dongtai_agent_python
+          file = os.path.dirname(dongtai_agent_python.__file__) + os.sep + 'config.json'
+          f = open(file, 'w')
+          config = base64.b64decode('''${{ secrets.CONFIG_JSON }}'''.strip()).decode('utf-8')
+          f.write(config)
+          f.close()
+
+      - name: Install Django
+        run: |
+          pip install --user "Django${{ matrix.django-version }}"
+      - name: Run Django
+        run: |
+          cd testDjango
+          Start-Job { python manage.py runserver 127.0.0.1:8000 }
+          Get-Command curl.exe
+          curl -I --fail --retry-delay 10 --retry 30 --retry-connrefused http://127.0.0.1:8000

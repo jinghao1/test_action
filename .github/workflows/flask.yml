@@ -1,0 +1,68 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Flask
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  # sync:
+  setup:
+    # The type of runner that the job will run on
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ "ubuntu-20.04", "ubuntu-18.04", "macos-latest" ]
+        python-version: [ "3.6", "3.7", "3.8", "3.9", "3.10" ]
+        flask-version: [ ">=1.0,<1.1", ">=1.1,<1.2", ">=2.0,<2.1" ]
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@v2
+      - name: Clone Agent Repository
+        uses: actions/checkout@v2
+        with:
+          repository: HXSecurity/DongTai-agent-python
+          token: ${{ secrets.AGENT_ACCESS_TOKEN }}
+          ref: master
+          path: DongTai-agent-python
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Agent
+        run: |
+          pip install --upgrade pip setuptools PyYAML
+          pip install ./DongTai-agent-python
+          pip list | grep dongtai
+      - name: Prepare Config
+        shell: python
+        run: |
+          import os, base64, dongtai_agent_python
+          file = os.path.dirname(dongtai_agent_python.__file__) + os.sep + 'config.json'
+          f = open(file, 'w')
+          config = base64.b64decode('''${{ secrets.CONFIG_JSON }}'''.strip()).decode('utf-8')
+          f.write(config)
+          f.close()
+
+      - name: Install Flask
+        run: |
+          pip install "Flask${{ matrix.flask-version }}"
+      - name: Run Flask
+        run: |
+          cd testFlask
+          nohup python -u -m flask run -h 127.0.0.1 -p 5000 2>&1 &
+          curl -I --fail --retry-delay 10 --retry 30 --retry-connrefused http://127.0.0.1:5000
