@@ -48,7 +48,6 @@ jobs:
           pip install --user --upgrade pip setuptools PyYAML
           pip install --user ./DongTai-agent-python
           pip list | grep dongtai
-          echo test agent install
       - name: Prepare Config
         shell: python
         run: |
