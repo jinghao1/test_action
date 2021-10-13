@@ -45,7 +45,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install Agent
         run: |
-          pip install --upgrade pip PyYAML
+          pip install --upgrade pip setuptools PyYAML
           pip install ./DongTai-agent-python
           pip list | grep dongtai
           echo test agent install
