@@ -55,7 +55,7 @@ jobs:
           import os, base64, dongtai_agent_python
           file = os.path.dirname(dongtai_agent_python.__file__) + os.sep + 'config.json'
           f = open(file, 'w')
-          config = base64.b64decode('${{ secrets.CONFIG_JSON }}').decode('utf-8')
+          config = base64.b64decode('''${{ secrets.CONFIG_JSON }}'''.strip()).decode('utf-8')
           f.write(config)
           f.close()
 
