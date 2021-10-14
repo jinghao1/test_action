@@ -62,6 +62,8 @@ jobs:
         run: |
           pip install "Flask${{ matrix.flask-version }}"
       - name: Run Flask
+        env:
+          FLASK_APP: app.py
         run: |
           cd testFlask
           nohup python -u -m flask run -h 127.0.0.1 -p 5000 2>&1 &
